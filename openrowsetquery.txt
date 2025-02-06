@@ -1,0 +1,46 @@
+-----CREATE MASTER KEY ENCRYPTION BY PASSWORD = ''
+---------CREATE CREDENTIAL-----
+CREATE DATABASE SCOPED CREDENTIAL snehacred WITH IDENTITY = 'Managed Identity'
+
+---------CREATE EXTERNAL DATA SOURCE-----
+CREATE EXTERNAL DATA SOURCE raw_ext_data_source
+WITH
+(
+    LOCATION = 'https://datalakesynapsesneha.dfs.core.windows.net/raw',
+    CREDENTIAL = snehacred
+)
+
+---------CREATE EXTERNAL FILE FORMAT-----
+CREATE EXTERNAL FILE FORMAT csv_format
+WITH
+(
+    FORMAT_TYPE = DelimitedText,
+    FORMAT_OPTIONS 
+    ( 
+        FIELD_TERMINATOR = ','
+    )
+);
+
+---------CREATE PARQUET EXTERNAL FILE FORMAT-----
+
+CREATE EXTERNAL FILE FORMAT parquet_format
+WITH
+(
+    FORMAT_TYPE = PARQUET,  -- Use PARQUET without quotes
+    DATA_COMPRESSION = 'org.apache.hadoop.io.compress.SnappyCodec'  -- Correct case and single quotes
+);
+
+
+
+
+----------OPENROWSET-------
+SELECT * FROM
+OPENROWSET (
+    BULK  'revenue',
+    DATA_SOURCE = 'raw_ext_data_source',
+    FORMAT = 'CSV',
+    PARSER_VERSION = '2.0',
+    HEADER_ROW = TRUE
+    ) AS result
+
+

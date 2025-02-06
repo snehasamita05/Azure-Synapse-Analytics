@@ -1,0 +1,34 @@
+-----CREATE MASTER KEY ENCRYPTION BY PASSWORD = ''
+---------CREATE CREDENTIAL-----
+CREATE DATABASE SCOPED CREDENTIAL snehacred WITH IDENTITY = 'Managed Identity'
+
+---------CREATE EXTERNAL DATA SOURCE-----
+CREATE EXTERNAL DATA SOURCE raw_ext_data_source
+WITH
+(
+    LOCATION = 'https://datalakesynapsesneha.dfs.core.windows.net/raw',
+    CREDENTIAL = snehacred
+)
+
+---------CREATE EXTERNAL DATA SOURCE ABFSS-----
+--drop EXTERNAL DATA SOURCE raw_ext_data_source_abfss
+CREATE EXTERNAL DATA SOURCE raw_ext_data_source_abfss
+WITH
+(
+    LOCATION = 'abfss://raw@datalakesynapsesneha.dfs.core.windows.net/',
+    CREDENTIAL = snehacred
+)
+
+
+
+---------CREATE PARQUET EXTERNAL FILE FORMAT-----
+
+CREATE EXTERNAL FILE FORMAT parquet_format
+WITH
+(
+    FORMAT_TYPE = PARQUET,  -- Use PARQUET without quotes
+    DATA_COMPRESSION = 'org.apache.hadoop.io.compress.SnappyCodec'  -- Correct case and single quotes
+);
+
+
+

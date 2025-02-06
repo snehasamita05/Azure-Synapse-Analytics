@@ -1,0 +1,24 @@
+------CETAS TABLE---------
+CREATE EXTERNAL TABLE revenue_cetas
+WITH
+(
+    LOCATION = 'cetas_revenue', 
+    DATA_SOURCE = raw_ext_data_source,
+    FILE_FORMAT = parquet_format
+)
+AS 
+SELECT * FROM
+OPENROWSET (
+    BULK  'revenue',
+    DATA_SOURCE = 'raw_ext_data_source',
+    FORMAT = 'CSV',
+    PARSER_VERSION = '2.0',
+    HEADER_ROW = TRUE
+    ) AS result
+
+select * from revenue_cetas
+
+
+
+
+

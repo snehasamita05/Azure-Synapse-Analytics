@@ -1,0 +1,48 @@
+------Round Robin Table--------
+CREATE TABLE ROUND_TABLE
+(
+    ID INT,
+    NAME VARCHAR(4000),
+    SALARY INT
+)
+WITH
+(
+    DISTRIBUTION = ROUND_ROBIN
+);
+
+INSERT INTO ROUND_TABLE VALUES (1,'AA',10);
+SELECT * FROM ROUND_TABLE
+
+
+------REPLICATE Table--------
+
+CREATE SCHEMA gold;
+CREATE TABLE gold.dim_product
+(
+    dim_key_prod INT,
+    prod_id INT,
+    prod_name VARCHAR(4000)
+)
+WITH
+(
+    DISTRIBUTION = REPLICATE
+);
+
+INSERT INTO gold.dim_product VALUES (1,1,'cc');
+SELECT * FROM gold.dim_product
+
+------HASH Table--------
+CREATE TABLE gold.facttable
+(
+    dim_key_prod INT,
+    revenue INT,
+    COST INT
+)
+WITH
+(
+    DISTRIBUTION = HASH(dim_key_prod)
+);
+
+INSERT INTO ROUND_TABLE VALUES (1,'AA',10);
+SELECT * FROM ROUND_TABLE
+
